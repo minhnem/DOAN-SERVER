@@ -1,6 +1,139 @@
 import CategoryModel from "../models/CategoryModel"
 import DishModel from "../models/DishModel"
 
+// Dish
+const getProducts = async (req: any, res: any) => {
+    const {title, page, pageSize} = req.query
+    const filter: any = {}
+    if(title) {
+        filter.slug = {$regex: title}
+    }
+    filter.isDeleted = false
+    try {
+        const skip = (page - 1) * pageSize
+        const products = await DishModel.find(filter).skip(skip).limit(pageSize).lean()
+        const totalProduct = await DishModel.find({isDeleted: false})
+        const total = totalProduct.length
+        res.status(200).json({
+            message: 'Products',
+            data: {
+                products,
+                total,
+            },
+        });
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message
+        })
+    }
+}
+
+const getAllProduct = async (req: any, res: any) => {
+    try {
+        const product = await DishModel.find({})
+        res.status(200).json({
+            message: 'Lấy sản phẩm theo id thành công',
+            data: product
+        })
+    } catch (error: any) {
+       res.status(404).json({
+        message: error.message
+       }) 
+    }
+}
+
+const getProductDetail = async (req: any, res: any) => {
+    const {id} = req.query
+    try {
+        const product = await DishModel.findById(id)
+        res.status(200).json({
+            message: 'Lấy sản phẩm theo id thành công',
+            data: product
+        })
+    } catch (error: any) {
+       res.status(404).json({
+        message: error.message
+       }) 
+    }
+}
+
+const addProduct = async (req: any, res: any) => {
+    const body = req.body
+    try {
+
+        const item = await DishModel.findOne({slug: body.slug})
+
+        if(item) {
+            throw new Error('Món ăn này đã tồn tại.')
+        }
+
+        const newProduct = new DishModel(body)
+        await newProduct.save()
+        
+        res.status(200).json({
+            message: 'Thêm món ăn thành công',
+            data: newProduct
+        })
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message
+        })
+    }
+}
+
+const deleteProduct = async (req: any, res: any) => {
+    const {id} = req.query
+    try {
+        await DishModel.findByIdAndUpdate(id, {isDeleted: true})
+        res.status(200).json({
+            message: 'Xóa món ăn thành công.',
+            data: []
+        })
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message 
+        })
+    }
+}
+
+const updateProduct = async (req: any, res: any) => {
+    const body = req.body
+    const {id} = req.query
+    try {
+        const product = await DishModel.findByIdAndUpdate(id, body)
+        res.status(200).json({
+            message: 'Sửa món ăn thành công.',
+            data: product
+        })
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message 
+        })
+    }
+}
+
+const filterProduct = async (req: any, res: any) => {
+    const body = req.body
+    const {categories, price} = body
+    try {
+        const filter: any = {}
+        if(categories && categories.length > 0) {
+            filter.categories = {$in: categories}
+        }
+        if(price && price.length > 0) {
+            filter.price = {$gt: price[0], $lt: price[1]}
+        }
+        const product = await DishModel.find(filter)
+        res.status(200).json({
+            message: 'Sửa món ăn thành công.',
+            data: product
+        })
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message 
+        })
+    }
+}
 
 // Category
 const addCategory = async (req: any, res: any) => {
@@ -148,4 +281,11 @@ export {
     getCategoryDetail, 
     deleteCategories, 
     updateCategory, 
+    getProducts, 
+    addProduct, 
+    deleteProduct,
+    updateProduct,
+    getProductDetail,
+    getAllProduct,
+    filterProduct,
 }

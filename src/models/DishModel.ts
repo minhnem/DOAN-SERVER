@@ -9,12 +9,13 @@ const schema = new Schema({
     description: String,
     content: String,
     categories: [String],
-    supplier: {
-        type: String, 
-        required: true
+    price: {
+        type: Number,
+        require: true
     },
-    expiryDate: {
-        type: Date
+    status: {
+        type: String,
+        default: 'Phục vụ'
     },
     images: {
         type: [String]

@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import cors from 'cors'
 import userRouter from './src/routers/userRouter'
 import dishRouter from './src/routers/dishRouter'
+import supplierRouter from './src/routers/supplierRouter'
 
 dotenv.config()
 
@@ -16,6 +17,7 @@ app.use(cors())
 
 app.use('/user', userRouter)
 app.use('/dish', dishRouter)
+app.use('/supplier', supplierRouter)
 
 const connectDB = async () => {
     try {
