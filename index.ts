@@ -5,6 +5,7 @@ import cors from 'cors'
 import userRouter from './src/routers/userRouter'
 import dishRouter from './src/routers/dishRouter'
 import supplierRouter from './src/routers/supplierRouter'
+import promotionRouter from './src/routers/promotionRouter'
 
 dotenv.config()
 
@@ -18,6 +19,7 @@ app.use(cors())
 app.use('/user', userRouter)
 app.use('/dish', dishRouter)
 app.use('/supplier', supplierRouter)
+app.use('/promotion', promotionRouter)
 
 const connectDB = async () => {
     try {
