@@ -1,8 +1,9 @@
-import CategoryModel from "../models/CategoryModel"
-import DishModel from "../models/DishModel"
 
-// Dish
-const getProducts = async (req: any, res: any) => {
+import CategoryMaterialsModel from "../models/CategoryMaterialsModel"
+import MaterialsModel from "../models/MaterialsModel"
+
+// Materials
+const getMaterials = async (req: any, res: any) => {
     const {title, page, pageSize} = req.query
     const filter: any = {}
     if(title) {
@@ -11,8 +12,8 @@ const getProducts = async (req: any, res: any) => {
     filter.isDeleted = false
     try {
         const skip = (page - 1) * pageSize
-        const products = await DishModel.find(filter).skip(skip).limit(pageSize).lean()
-        const totalProduct = await DishModel.find({isDeleted: false})
+        const products = await MaterialsModel.find(filter).skip(skip).limit(pageSize).lean()
+        const totalProduct = await MaterialsModel.find({isDeleted: false})
         const total = totalProduct.length
         res.status(200).json({
             message: 'Products',
@@ -28,9 +29,9 @@ const getProducts = async (req: any, res: any) => {
     }
 }
 
-const getAllProduct = async (req: any, res: any) => {
+const getAllMaterials = async (req: any, res: any) => {
     try {
-        const product = await DishModel.find({})
+        const product = await MaterialsModel.find({})
         res.status(200).json({
             message: 'Lấy sản phẩm theo id thành công',
             data: product
@@ -42,10 +43,10 @@ const getAllProduct = async (req: any, res: any) => {
     }
 }
 
-const getProductDetail = async (req: any, res: any) => {
+const getMaterialsDetail = async (req: any, res: any) => {
     const {id} = req.query
     try {
-        const product = await DishModel.findById(id)
+        const product = await MaterialsModel.findById(id)
         res.status(200).json({
             message: 'Lấy sản phẩm theo id thành công',
             data: product
@@ -57,21 +58,21 @@ const getProductDetail = async (req: any, res: any) => {
     }
 }
 
-const addProduct = async (req: any, res: any) => {
+const addMaterials = async (req: any, res: any) => {
     const body = req.body
     try {
 
-        const item = await DishModel.findOne({slug: body.slug})
+        const item = await MaterialsModel.findOne({slug: body.slug})
 
         if(item) {
-            throw new Error('Món ăn này đã tồn tại.')
+            throw new Error('Nguyên liệu này đã tồn tại.')
         }
 
-        const newProduct = new DishModel(body)
+        const newProduct = new MaterialsModel(body)
         await newProduct.save()
         
         res.status(200).json({
-            message: 'Thêm món ăn thành công',
+            message: 'Thêm nguyên lệu thành công',
             data: newProduct
         })
     } catch (error: any) {
@@ -81,12 +82,12 @@ const addProduct = async (req: any, res: any) => {
     }
 }
 
-const deleteProduct = async (req: any, res: any) => {
+const deleteMaterials = async (req: any, res: any) => {
     const {id} = req.query
     try {
-        await DishModel.findByIdAndUpdate(id, {isDeleted: true})
+        await MaterialsModel.findByIdAndUpdate(id, {isDeleted: true})
         res.status(200).json({
-            message: 'Xóa món ăn thành công.',
+            message: 'Xóa nguyên liệu thành công.',
             data: []
         })
     } catch (error: any) {
@@ -96,13 +97,13 @@ const deleteProduct = async (req: any, res: any) => {
     }
 }
 
-const updateProduct = async (req: any, res: any) => {
+const updateMaterials = async (req: any, res: any) => {
     const body = req.body
     const {id} = req.query
     try {
-        const product = await DishModel.findByIdAndUpdate(id, body)
+        const product = await MaterialsModel.findByIdAndUpdate(id, body)
         res.status(200).json({
-            message: 'Sửa món ăn thành công.',
+            message: 'Sửa nguyên liệu thành công.',
             data: product
         })
     } catch (error: any) {
@@ -112,7 +113,7 @@ const updateProduct = async (req: any, res: any) => {
     }
 }
 
-const filterProduct = async (req: any, res: any) => {
+const filterMaterials = async (req: any, res: any) => {
     const body = req.body
     const {categories, price} = body
     try {
@@ -121,11 +122,11 @@ const filterProduct = async (req: any, res: any) => {
             filter.categories = {$in: categories}
         }
         if(price && price.length > 0) {
-            filter.price = {$gte: price[0], $lte: price[1]}
+            filter.price = {$gt: price[0], $lt: price[1]}
         }
-        const product = await DishModel.find(filter)
+        const product = await MaterialsModel.find(filter)
         res.status(200).json({
-            message: 'Sửa món ăn thành công.',
+            message: 'Sửa nguyên liệu thành công.',
             data: product
         })
     } catch (error: any) {
@@ -136,11 +137,11 @@ const filterProduct = async (req: any, res: any) => {
 }
 
 // Category
-const addCategory = async (req: any, res: any) => {
+const addCategoryMaterials = async (req: any, res: any) => {
     const body = req.body
     const {parentId, slug} = body
     try {
-        const category = await CategoryModel.findOne({
+        const category = await CategoryMaterialsModel.findOne({
             parentId: parentId,
             slug: slug
         })
@@ -149,7 +150,7 @@ const addCategory = async (req: any, res: any) => {
             throw Error('Danh mục đã tồn tại.')
         }
 
-        const newCategory = new CategoryModel(body)
+        const newCategory = new CategoryMaterialsModel(body)
         await newCategory.save()
 
         res.status(200).json({
@@ -163,12 +164,12 @@ const addCategory = async (req: any, res: any) => {
     }
 }
 
-const getCategories = async (req: any, res: any) => {
+const getCategoriesMaterials = async (req: any, res: any) => {
     const {page, pageSize} = req.query
     try {
         const skip = (page -1) * pageSize
-        const categories = await CategoryModel.find({$or: [{isDeleted: false}, {isDeleted: null}]}).skip(skip).limit(pageSize)
-        const total = await CategoryModel.countDocuments()
+        const categories = await CategoryMaterialsModel.find({$or: [{isDeleted: false}, {isDeleted: null}]}).skip(skip).limit(pageSize)
+        const total = await CategoryMaterialsModel.countDocuments()
         res.status(200).json({
             message: 'Lấy danh mục thành công.',
             data: {
@@ -183,9 +184,9 @@ const getCategories = async (req: any, res: any) => {
     }
 }
 
-const getAllCategories = async (req: any, res: any) => {
+const getAllCategoriesMaterials = async (req: any, res: any) => {
     try {
-        const categories = await CategoryModel.find({$or: [{isDeleted: false}, {isDeleted: null}]})
+        const categories = await CategoryMaterialsModel.find({$or: [{isDeleted: false}, {isDeleted: null}]})
         res.status(200).json({
             message: 'Lấy danh mục thành công.',
             data: categories,
@@ -197,10 +198,10 @@ const getAllCategories = async (req: any, res: any) => {
     }
 }
 
-const getCategoryDetail = async (req: any, res: any) => {
+const getCategoryMaterialsDetail = async (req: any, res: any) => {
     const {id} = req.query
     try {
-        const category = await CategoryModel.findById(id)
+        const category = await CategoryMaterialsModel.findById(id)
         res.status(200).json({
             message: 'Lấy danh mục thành công.',
             data: category
@@ -213,7 +214,7 @@ const getCategoryDetail = async (req: any, res: any) => {
 }
 
 const findAndDeleteCategoryInProduct = async (id: string) => {
-    const categories = await CategoryModel.find({parentId: id})
+    const categories = await CategoryMaterialsModel.find({parentId: id})
     if(categories.length > 0) {
         categories.forEach( async (item: any) => await findAndDeleteCategoryInProduct(item._id))
     }
@@ -221,7 +222,7 @@ const findAndDeleteCategoryInProduct = async (id: string) => {
 }
 
 const handleRemoveCategoryInProduct = async (id: string) => {
-    const products = await DishModel.find({categories: {$all: id}})
+    const products = await MaterialsModel.find({categories: {$all: id}})
         if(products && products.length > 0){
             products.forEach( async (element: any) => {
                 const cats = element._doc.categories
@@ -230,20 +231,20 @@ const handleRemoveCategoryInProduct = async (id: string) => {
                 if(index !== -1) {
                     cats.splice(index, 1)  
                 }
-                await DishModel.findByIdAndUpdate(element._id, {categories: cats})
+                await MaterialsModel.findByIdAndUpdate(element._id, {categories: cats})
             })
         }
 }
 
-const deleteCategories = async (req: any, res: any) => {
+const deleteCategoriesMaterials = async (req: any, res: any) => {
     const { id, isDeleted } = req.query 
     try {
         await findAndDeleteCategoryInProduct(id)
         
         if (isDeleted) {
-            await CategoryModel.findByIdAndUpdate(id, {isDeleted: true})
+            await CategoryMaterialsModel.findByIdAndUpdate(id, {isDeleted: true})
         } else {
-            await CategoryModel.findByIdAndDelete(id)
+            await CategoryMaterialsModel.findByIdAndDelete(id)
         }
 
         res.status(200).json({
@@ -257,12 +258,12 @@ const deleteCategories = async (req: any, res: any) => {
     }
 }
 
-const updateCategory = async (req: any, res: any) => {
+const updateCategoryMaterials = async (req: any, res: any) => {
     const body = req.body
     const {id} = req.query
     try {
         
-        await CategoryModel.findByIdAndUpdate(id, body)
+        await CategoryMaterialsModel.findByIdAndUpdate(id, body)
         res.status(200).json({
             message: 'Sửa danh mục thành công',
             data: []
@@ -275,17 +276,17 @@ const updateCategory = async (req: any, res: any) => {
 }
 
 export {
-    addCategory, 
-    getCategories,
-    getAllCategories, 
-    getCategoryDetail, 
-    deleteCategories, 
-    updateCategory, 
-    getProducts, 
-    addProduct, 
-    deleteProduct,
-    updateProduct,
-    getProductDetail,
-    getAllProduct,
-    filterProduct,
+    addCategoryMaterials, 
+    getCategoriesMaterials,
+    getAllCategoriesMaterials, 
+    getCategoryMaterialsDetail, 
+    deleteCategoriesMaterials, 
+    updateCategoryMaterials, 
+    getMaterials, 
+    addMaterials, 
+    deleteMaterials,
+    updateMaterials,
+    getMaterialsDetail,
+    getAllMaterials,
+    filterMaterials,
 }
