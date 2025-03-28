@@ -241,8 +241,10 @@ const deleteCategories = async (req: any, res: any) => {
         await findAndDeleteCategoryInProduct(id)
         
         if (isDeleted) {
+            await CategoryModel.updateMany({parentId: id}, {$set: {parentId: ''}})
             await CategoryModel.findByIdAndUpdate(id, {isDeleted: true})
         } else {
+            await CategoryModel.updateMany({parentId: id}, {$set: {parentId: ''}})
             await CategoryModel.findByIdAndDelete(id)
         }
 

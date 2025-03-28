@@ -7,6 +7,7 @@ import dishRouter from './src/routers/dishRouter'
 import supplierRouter from './src/routers/supplierRouter'
 import promotionRouter from './src/routers/promotionRouter'
 import materialsRouter from './src/routers/materialsRouter'
+import tableRouter from './src/routers/tableRouter'
 
 dotenv.config()
 
@@ -22,6 +23,7 @@ app.use('/dish', dishRouter)
 app.use('/supplier', supplierRouter)
 app.use('/promotion', promotionRouter)
 app.use('/materials', materialsRouter)
+app.use('/table', tableRouter)
 
 const connectDB = async () => {
     try {
