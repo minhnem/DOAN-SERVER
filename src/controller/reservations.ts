@@ -3,13 +3,30 @@ import TableModel from "../models/TableModel"
 
 const addNewReservations = async (req: any, res: any) => {
     const body = req.body
-    
     try {
         const reservations = new ReservationsModel(body)
-        await reservations.save()
+        const item = await reservations.save()
+        if(item) {
+            await TableModel.findByIdAndUpdate(item.table_id, {$set: {status: 'Được đặt trước'}})
+        }
 
         res.status(200).json({
             message: 'Thêm 1 thông tin đặt bàn thành công.',
+            data: reservations
+        })
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message
+        })
+    }
+}
+
+const getReservationsById = async (req: any, res: any) => {
+    const id = req.query
+    try {
+        const reservations = await ReservationsModel.findById(id)
+        res.status(200).json({
+            message: 'Lấy đơn đặt bàn theo id thành công',
             data: reservations
         })
     } catch (error: any) {
@@ -36,7 +53,8 @@ const getAllReservations = async (req: any, res: any) => {
 const removeReservations = async (req: any, res: any) => {
     const {id} = req.query
     try {
-        await ReservationsModel.findByIdAndDelete(id)
+        const item = await ReservationsModel.findByIdAndDelete(id)
+        item && await TableModel.findOneAndUpdate({_id: item?.table_id}, {$set: {status: 'Trống'}})
         res.status(200).json({
             message: 'Xóa thông tin đặt bàn thành công.',
             data: {}
@@ -64,4 +82,4 @@ const updateReservations = async (req: any, res: any) => {
     }
 }
 
-export {addNewReservations, getAllReservations, updateReservations, removeReservations}
+export {addNewReservations, getAllReservations, updateReservations, removeReservations, getReservationsById}

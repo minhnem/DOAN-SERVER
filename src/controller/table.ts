@@ -1,3 +1,4 @@
+import ReservationModel from "../models/ReservationsModel"
 import TableModel from "../models/TableModel"
 
 const addNewTable = async (req: any, res: any) => {
@@ -15,6 +16,23 @@ const addNewTable = async (req: any, res: any) => {
         res.status(200).json({
             message: 'Thêm 1 bàn ăn mới thành công.',
             data: table
+        })
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message
+        })
+    }
+}
+
+const getTableReservations = async (req: any, res: any) => {
+    const {id} = req.query
+    try {
+        const reservations: any = await ReservationModel.findOne({table_id: id})
+        const table: any = await TableModel.findById(id)
+        const tableDetail = {...table._doc, reservations: reservations}
+        res.status(200).json({
+            message: 'Lấy tất cả các bàn ăn ra thành công',
+            data: tableDetail
         })
     } catch (error: any) {
         res.status(404).json({
@@ -68,4 +86,4 @@ const updateTable = async (req: any, res: any) => {
     }
 }
 
-export {addNewTable, getAllTable, updateTable, removeTable}
+export {addNewTable, getAllTable, updateTable, removeTable, getTableReservations}
