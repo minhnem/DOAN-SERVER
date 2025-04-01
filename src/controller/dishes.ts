@@ -1,5 +1,6 @@
 import CategoryModel from "../models/CategoryModel"
 import DishModel from "../models/DishModel"
+import { deleteFileByUrl } from "../utils/cloudinary"
 
 // Dish
 const getProducts = async (req: any, res: any) => {
@@ -84,6 +85,12 @@ const addProduct = async (req: any, res: any) => {
 const deleteProduct = async (req: any, res: any) => {
     const {id} = req.query
     try {
+        const item = await DishModel.findById(id)
+        if(item && item.images.length > 0) {
+            for(const i of item.images) {
+                await deleteFileByUrl(i)
+            }
+        }
         await DishModel.findByIdAndUpdate(id, {isDeleted: true})
         res.status(200).json({
             message: 'Xóa món ăn thành công.',
@@ -96,10 +103,27 @@ const deleteProduct = async (req: any, res: any) => {
     }
 }
 
+const findEndDeleteUrl = async (arr1: string[], arr2: string[]) => {
+    if(!Array.isArray(arr1)) {
+        for(const i of arr2){
+            await deleteFileByUrl(i)
+        }
+    } else {
+        const itemDelete = arr2.filter((item) => !arr1.includes(item))
+        if(itemDelete.length > 0) {
+            for(const i of itemDelete){
+                await deleteFileByUrl(i)
+            }
+        }
+    }
+}
+
 const updateProduct = async (req: any, res: any) => {
     const body = req.body
     const {id} = req.query
     try {
+        const item = await DishModel.findById(id)
+        item && findEndDeleteUrl(body.images, item.images)
         const product = await DishModel.findByIdAndUpdate(id, body)
         res.status(200).json({
             message: 'Sửa món ăn thành công.',
