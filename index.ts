@@ -9,6 +9,7 @@ import promotionRouter from './src/routers/promotionRouter'
 import materialsRouter from './src/routers/materialsRouter'
 import tableRouter from './src/routers/tableRouter'
 import reservationsRouter from './src/routers/reservationsRouter'
+import orderRouter from './src/routers/orderRouter'
 
 dotenv.config()
 
@@ -26,6 +27,7 @@ app.use('/promotion', promotionRouter)
 app.use('/materials', materialsRouter)
 app.use('/table', tableRouter)
 app.use('/reservations', reservationsRouter)
+app.use('/order', orderRouter)
 
 const connectDB = async () => {
     try {
