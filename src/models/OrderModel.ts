@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const schema = new Schema({
     tableId: {
         type: String,
-        require: true
+        required: true
     },
     title: String,
     price: Number,
@@ -11,7 +11,7 @@ const schema = new Schema({
     count: Number,
     dishId: {
         type: String,
-        require: true
+        required: true
     },
     isDeleted: {
         type: Boolean,

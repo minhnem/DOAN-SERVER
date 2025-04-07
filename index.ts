@@ -10,6 +10,7 @@ import materialsRouter from './src/routers/materialsRouter'
 import tableRouter from './src/routers/tableRouter'
 import reservationsRouter from './src/routers/reservationsRouter'
 import orderRouter from './src/routers/orderRouter'
+import billRouter from './src/routers/billRouter'
 
 dotenv.config()
 
@@ -28,6 +29,7 @@ app.use('/materials', materialsRouter)
 app.use('/table', tableRouter)
 app.use('/reservations', reservationsRouter)
 app.use('/order', orderRouter)
+app.use('/bill', billRouter)
 
 const connectDB = async () => {
     try {

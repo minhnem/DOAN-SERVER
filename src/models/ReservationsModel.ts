@@ -4,15 +4,15 @@ const scheme = new Schema({
     table_id: String,
     name: {
         type: String,
-        require: true
+        required: true
     },
     phone: {
         type: Number,
-        require: true
+        required: true
     },
     email: {
         type: String,
-        require: true
+        required: true
     },
     reservation_time: {
         type: Date,

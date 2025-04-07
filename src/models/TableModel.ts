@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const scheme = new Schema({
     name: {
         type: String,
-        require: true,
+        required: true,
     },
     slug: String,
     reservations_id: String,

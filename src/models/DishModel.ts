@@ -11,7 +11,7 @@ const schema = new Schema({
     categories: [String],
     price: {
         type: Number,
-        require: true
+        required: true
     },
     status: {
         type: String,

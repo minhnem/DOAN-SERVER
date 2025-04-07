@@ -14,7 +14,7 @@ const scheme = new Schema({
     },
     cost: {
         type: Number,
-        require: true
+        required: true
     },
     images: {
         type: [String]

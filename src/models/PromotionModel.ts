@@ -4,16 +4,16 @@ const schema = new Schema(
     {
         title: {
             type: String,
-            require: true
+            required: true
         },
         description: String,
         code: {
             type: String,
-            require: true
+            required: true
         },
         value: {
             type: Number,
-            require: true
+            required: true
         },
         numOfAvailabel: {
             type: Number,
@@ -25,7 +25,7 @@ const schema = new Schema(
         },
         startAt: {
             type: Date,
-            require: true
+            required: true
         },
         endAt: Date,
     },

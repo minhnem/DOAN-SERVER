@@ -68,4 +68,33 @@ const updatePromotion = async (req: any, res: any) => {
     }
 }
 
-export { addNew, getPromotion, removePromotion, updatePromotion }
+const checkPromotion = async (req: any, res: any) => {
+    const query = req.query
+    const {value} = query
+    try {
+        const item = await PromotionModel.findOne({code: value})
+        if(item && item.endAt && item.startAt) {
+            const startDate = new Date(item.startAt)
+            const endDate = new Date(item.endAt)
+            const dateNow = new Date()
+            if(dateNow > endDate) {
+                throw new Error('Mã giảm giá đã hết hạn')
+            } else if (dateNow < startDate) {
+                throw new Error('Mã giảm giá không hợp lệ')
+            } else {
+                res.status(200).json({
+                    message: 'Áp mã giảm giá thành công',
+                    data: item
+                })
+            }
+        } else {
+            throw new Error('Mã giảm giá không tồn tại!!')
+        }
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message
+        })
+    }
+}
+
+export { addNew, getPromotion, removePromotion, updatePromotion, checkPromotion }
