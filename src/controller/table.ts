@@ -86,4 +86,19 @@ const updateTable = async (req: any, res: any) => {
     }
 }
 
-export {addNewTable, getAllTable, updateTable, removeTable, getTableReservations}
+const updateStatusTable = async (req: any, res: any) => {
+    const {id} = req.query
+    try {
+        const table = await TableModel.findByIdAndUpdate(id, {status: 'Đang phục vụ'})
+        res.status(200).json({
+            message: 'Cập nhật bàn ăn thành công.',
+            data: table
+        })
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message
+        })
+    }
+}
+
+export {addNewTable, getAllTable, updateTable, removeTable, getTableReservations, updateStatusTable}
