@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addCategory, addProduct, deleteCategories, deleteProduct, filterProduct, getAllCategories, getAllProduct, getCategories, getCategoryDetail, getProductDetail, getProducts, updateCategory, updateProduct } from "../controller/dishes";
+import { addCategory, addProduct, deleteCategories, deleteProduct, filterProduct, getAllCategories, getAllCategoriesPerent, getAllProduct, getCategories, getCategoryDetail, getDishByIdCategories, getProductDetail, getProducts, updateCategory, updateProduct } from "../controller/dishes";
 
 const router = Router()
 
@@ -21,5 +21,7 @@ router.put('/update-category', updateCategory)
 router.get('/get-all-categories', getAllCategories)
 router.get('/get-categories', getCategories)
 router.get('/category/detail', getCategoryDetail)
+router.get('/get-parent-category', getAllCategoriesPerent)
+router.get('/get-dish-by-id-category', getDishByIdCategories)
 
 export default router

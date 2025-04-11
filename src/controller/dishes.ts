@@ -58,6 +58,21 @@ const getProductDetail = async (req: any, res: any) => {
     }
 }
 
+const getDishByIdCategories = async (req: any, res: any) => {
+    const {id} = req.query
+    try {
+        const product = await DishModel.find({categories: {$in: [id]}})
+        res.status(200).json({
+            message: 'Lấy sản phẩm theo id thành công',
+            data: product
+        })
+    } catch (error: any) {
+       res.status(404).json({
+        message: error.message
+       }) 
+    }
+}
+
 const addProduct = async (req: any, res: any) => {
     const body = req.body
     try {
@@ -221,6 +236,20 @@ const getAllCategories = async (req: any, res: any) => {
     }
 }
 
+const getAllCategoriesPerent = async (req: any, res: any) => {
+    try {
+        const categories = await CategoryModel.find({parentId: '', $or: [{isDeleted: false}, {isDeleted: null}]})
+        res.status(200).json({
+            message: 'Lấy danh mục thành công.',
+            data: categories,
+        })
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message
+        })
+    }
+}
+
 const getCategoryDetail = async (req: any, res: any) => {
     const {id} = req.query
     try {
@@ -314,4 +343,6 @@ export {
     getProductDetail,
     getAllProduct,
     filterProduct,
+    getAllCategoriesPerent,
+    getDishByIdCategories,
 }
