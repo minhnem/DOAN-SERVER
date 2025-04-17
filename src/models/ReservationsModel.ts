@@ -14,7 +14,8 @@ const scheme = new Schema({
         type: String,
         required: true
     },
-    reservation_time: {
+    reservation_time: String,
+    reservation_date: {
         type: Date,
         default: Date.now()
     },

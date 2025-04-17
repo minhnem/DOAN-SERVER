@@ -25,9 +25,16 @@ const addNewTable = async (req: any, res: any) => {
 }
 
 const getTableReservations = async (req: any, res: any) => {
-    const {id} = req.query
+    const {id, date, time} = req.query
     try {
-        const reservations: any = await ReservationModel.findOne({table_id: id})
+        const targetDate = date ? new Date(date) : new Date()
+        const startOfDay = new Date(targetDate)
+        startOfDay.setHours(0,0,0,0)
+
+        const endOfDay = new Date(targetDate)
+        endOfDay.setHours(23, 59, 59, 999)
+
+        const reservations: any = await ReservationModel.findOne({table_id: id, reservation_time: time, reservation_date: {$gte: startOfDay, $lte: endOfDay}})
         const table: any = await TableModel.findById(id)
         const tableDetail = {...table._doc, reservations: reservations}
         res.status(200).json({
@@ -42,11 +49,36 @@ const getTableReservations = async (req: any, res: any) => {
 }
 
 const getAllTable = async (req: any, res: any) => {
+    const {date} = req.query
     try {
-        const table = await TableModel.find({})
+
+        const targetDate = date ? new Date(date) : new Date()
+        const startOfDay = new Date(targetDate)
+        startOfDay.setHours(0,0,0,0)
+
+        const endOfDay = new Date(targetDate)
+        endOfDay.setHours(23, 59, 59, 999)
+
+        const tables = await TableModel.find({})
+        const tablesWithReservations = await Promise.all(
+            tables.map(async (table: any) => {
+                const reservations = await ReservationModel.find({
+                    table_id: table._id,
+                    reservation_date: {
+                        $gte: startOfDay,
+                        $lte: endOfDay
+                    }
+                });
+
+                return {
+                    ...table._doc,
+                    reservations
+                };
+            })
+        );
         res.status(200).json({
             message: 'Lấy tất cả các bàn ăn ra thành công',
-            data: table
+            data: tablesWithReservations
         })
     } catch (error: any) {
         res.status(404).json({
