@@ -50,6 +50,22 @@ const getAllReservations = async (req: any, res: any) => {
     }
 }
 
+const getAllReservationsStatus = async (req: any, res: any) => {
+    const query = req.query
+    const {status} = query
+    try {
+        const reservations = await ReservationsModel.find({status: status})
+        res.status(200).json({
+            message: 'Thành công',
+            data: reservations
+        })
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message
+        })
+    }
+}
+
 const removeReservations = async (req: any, res: any) => {
     const {id} = req.query
     try {
@@ -82,4 +98,4 @@ const updateReservations = async (req: any, res: any) => {
     }
 }
 
-export {addNewReservations, getAllReservations, updateReservations, removeReservations, getReservationsById}
+export {addNewReservations, getAllReservations, updateReservations, removeReservations, getReservationsById, getAllReservationsStatus}

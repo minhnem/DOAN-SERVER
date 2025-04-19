@@ -19,6 +19,10 @@ const scheme = new Schema({
         type: Date,
         default: Date.now()
     },
+    status: {
+        type: String,
+        default: 'Chờ xử lý'
+    },
     createdAt: {
         type: Date,
         default: Date.now()
