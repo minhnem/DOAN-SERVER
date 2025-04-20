@@ -11,6 +11,7 @@ import tableRouter from './src/routers/tableRouter'
 import reservationsRouter from './src/routers/reservationsRouter'
 import orderRouter from './src/routers/orderRouter'
 import billRouter from './src/routers/billRouter'
+import feedbackRouter from './src/routers/feedbackRouter'
 
 dotenv.config()
 
@@ -30,6 +31,7 @@ app.use('/table', tableRouter)
 app.use('/reservations', reservationsRouter)
 app.use('/order', orderRouter)
 app.use('/bill', billRouter)
+app.use('/feedback', feedbackRouter)
 
 const connectDB = async () => {
     try {
