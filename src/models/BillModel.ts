@@ -5,7 +5,7 @@ const scheme = new Schema({
         type: String,
         required: true
     },
-    dishItems: [
+    dishItem: [
         {
             title: String,
             count: Number,
@@ -13,7 +13,10 @@ const scheme = new Schema({
         }
     ],
     discount: Number,
-    totalPrice: Number,
+    totalPrice: {
+        type: Number,
+        required: true
+    },
     isDeleted: {
         type: Boolean,
         default: false
