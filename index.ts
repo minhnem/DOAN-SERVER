@@ -14,6 +14,7 @@ import billRouter from './src/routers/billRouter'
 import feedbackRouter from './src/routers/feedbackRouter'
 import reportRouter from './src/routers/reportRouter'
 import personnelRouter from './src/routers/personnelRouter'
+import attendanceRouter from './src/routers/attendanceRouter'
 
 dotenv.config()
 
@@ -36,6 +37,7 @@ app.use('/bill', billRouter)
 app.use('/feedback', feedbackRouter)
 app.use('/report', reportRouter)
 app.use('/personnel', personnelRouter)
+app.use('/attendance', attendanceRouter)
 
 const connectDB = async () => {
     try {

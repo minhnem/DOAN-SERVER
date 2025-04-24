@@ -37,6 +37,20 @@ const getAllPersonnel = async (req: any, res: any) => {
     }
 }
 
+const getAllPersonnelAttendence = async (req: any, res: any) => {
+    try {
+        const personnel = await PersonnelModel.find({})
+        res.status(200).json({
+            message: 'Thành công',
+            data: personnel
+        })
+    } catch (error: any) {
+        res.status(404).json({
+            message: error.message
+        })
+    }
+}
+
 const removePersonnel = async (req: any, res: any) => {
     const {id} = req.query
     try {
