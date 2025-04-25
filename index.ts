@@ -15,6 +15,8 @@ import feedbackRouter from './src/routers/feedbackRouter'
 import reportRouter from './src/routers/reportRouter'
 import personnelRouter from './src/routers/personnelRouter'
 import attendanceRouter from './src/routers/attendanceRouter'
+import { Server } from 'socket.io'
+import http from 'http';
 
 dotenv.config()
 
@@ -22,8 +24,17 @@ const PORT = process.env.PORT
 const dbURL = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@cluster0.ywhsg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 const app = express()
 
+const server = http.createServer(app); // Dùng http server thay vì app.listen
+const io = new Server(server, {
+  cors: {
+    origin: '*', // hoặc domain FE bạn đang chạy
+  }
+});
+
 app.use(express.json())
 app.use(cors())
+
+app.set('io', io);
 
 app.use('/user', userRouter)
 app.use('/dish', dishRouter)
@@ -48,10 +59,25 @@ const connectDB = async () => {
     }
 }
 
+io.on('connection', (socket) => {
+    console.log('Client connected:', socket.id);
+    socket.on('disconnect', () => {
+      console.log('Client disconnectedd:', socket.id);
+    });
+});
+
 connectDB().then(() => {
-    app.listen(PORT, () => {
-        console.log(`server is starting at http://localhost:${PORT}`)
-    })
+    server.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}`);
+      });
 }).catch((error) => {
     console.log(error)
 })
+
+// connectDB().then(() => {
+//     app.listen(PORT, () => {
+//         console.log(`server is starting at http://localhost:${PORT}`)
+//     })
+// }).catch((error) => {
+//     console.log(error)
+// })

@@ -39,7 +39,9 @@ const addNewReservations = async (req: any, res: any) => {
                     </div>
                   </div>
                 `,
-              });
+            });
+            const io = req.app.get('io');
+            io.emit('new-reservation', item);
         }
 
         res.status(200).json({
