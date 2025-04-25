@@ -64,6 +64,7 @@ const getAllTable = async (req: any, res: any) => {
             tables.map(async (table: any) => {
                 const reservations = await ReservationModel.find({
                     table_id: table._id,
+                    status: 'Đã xác nhận',
                     reservation_date: {
                         $gte: startOfDay,
                         $lte: endOfDay
