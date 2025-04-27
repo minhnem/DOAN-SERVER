@@ -108,49 +108,26 @@ const getTimes = (timeType: string) => {
     return {start, end}
 }
 
+const getData = async (start: Date, end: Date) => {
+    const filter = {
+        createdAt: {
+            $gte: new Date(start.setHours(0, 0, 0, 0)),
+            $lte: new Date(end.setHours(23, 59, 59, 999))
+        }
+    };
+
+    const attendance = await AttendanceModel.find(filter);
+    const totaAttendance = attendance.length
+
+    return totaAttendance
+}
+
 const getTimePersonnelAttendance = async (req: any, res: any) => {
     const {timeType} = req.query
     try {
         const dates = getTimes(timeType);
-        const days: Date[] = [];
-    
-        if (timeType === 'Năm') {
-          for (let i = 0; i < 12; i++) {
-            days.push(new Date(dates.start.getFullYear(), i, 1));
-          }
-        } else {
-          const startDate = new Date(
-            dates.start.getFullYear(),
-            dates.start.getMonth(),
-            dates.start.getDate()
-          );
-          const endDate = new Date(
-            dates.end.getFullYear(),
-            dates.end.getMonth(),
-            dates.end.getDate()
-          );
-    
-          const msPerDay = 1000 * 60 * 60 * 24;
-          const timeDiff = endDate.getTime() - startDate.getTime();
-          const nums = Math.round(timeDiff / msPerDay) + 1;
-    
-          for (let i = 0; i < nums; i++) {
-            const day = new Date(startDate);
-            day.setDate(day.getDate() + i);
-            days.push(day);
-          }
-        }
 
-        let personnelAttendance
-        if (timeType === 'Năm') {
-            const start = new Date(days[0].getFullYear(), days[0].getMonth(), 1);
-            const end = new Date(days[days.length - 1].getFullYear(), days[days.length - 1].getMonth() + 1, 0);
-            personnelAttendance = await getPersonnelAttendance(start, end)
-        } else {
-            const start = new Date(days[0]);
-            const end = new Date(days[days.length - 1])
-            personnelAttendance = await getPersonnelAttendance(start, end)
-        }
+        const personnelAttendance = await getPersonnelAttendance(dates.start, dates.end)
 
         res.status(200).json({
             message: 'Thành công',
