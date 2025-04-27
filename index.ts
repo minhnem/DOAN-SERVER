@@ -15,6 +15,7 @@ import feedbackRouter from './src/routers/feedbackRouter'
 import reportRouter from './src/routers/reportRouter'
 import personnelRouter from './src/routers/personnelRouter'
 import attendanceRouter from './src/routers/attendanceRouter'
+import dashboardRouter from './src/routers/dashboardRouter'
 import { Server } from 'socket.io'
 import http from 'http';
 
@@ -24,10 +25,10 @@ const PORT = process.env.PORT
 const dbURL = `mongodb+srv://${process.env.DATABASE_USERNAME}:${process.env.DATABASE_PASSWORD}@cluster0.ywhsg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
 const app = express()
 
-const server = http.createServer(app); // Dùng http server thay vì app.listen
+const server = http.createServer(app); 
 const io = new Server(server, {
   cors: {
-    origin: '*', // hoặc domain FE bạn đang chạy
+    origin: '*', // hoặc domain FE đang chạy
   }
 });
 
@@ -49,6 +50,7 @@ app.use('/feedback', feedbackRouter)
 app.use('/report', reportRouter)
 app.use('/personnel', personnelRouter)
 app.use('/attendance', attendanceRouter)
+app.use('/dashboard', dashboardRouter)
 
 const connectDB = async () => {
     try {
