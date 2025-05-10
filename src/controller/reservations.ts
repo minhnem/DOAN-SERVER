@@ -11,7 +11,7 @@ const addNewReservations = async (req: any, res: any) => {
             await TableModel.findByIdAndUpdate(item.table_id, {$set: {status: 'Được đặt trước'}})
         }
 
-        if(item.status) {
+        if(!item.status) {
             await handleSendEmail({
                 from: 'Nhà hàng Hải Dương',
                 to: 'namtdvp10a6@gmail.com',
@@ -144,7 +144,9 @@ const updateReservations = async (req: any, res: any) => {
                     </div>
                   </div>
                 `,
-              });  
+            });  
+            const io = req.app.get('io');
+            io.emit('new-reservation', 0);
         }
         
         if (body.status === 'Đã xác nhận' && table) {
@@ -179,6 +181,8 @@ const updateReservations = async (req: any, res: any) => {
                     </div>
                 `,
             })
+            const io = req.app.get('io');
+            io.emit('new-reservation', 0);
         }
         const reservations = await ReservationsModel.findByIdAndUpdate(id, body)
         res.status(200).json({

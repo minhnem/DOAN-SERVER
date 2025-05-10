@@ -16,6 +16,7 @@ import reportRouter from './src/routers/reportRouter'
 import personnelRouter from './src/routers/personnelRouter'
 import attendanceRouter from './src/routers/attendanceRouter'
 import dashboardRouter from './src/routers/dashboardRouter'
+import subcsribeRouter from './src/routers/subcsribeRouter'
 import { Server } from 'socket.io'
 import http from 'http';
 
@@ -51,6 +52,7 @@ app.use('/report', reportRouter)
 app.use('/personnel', personnelRouter)
 app.use('/attendance', attendanceRouter)
 app.use('/dashboard', dashboardRouter)
+app.use('/subscribe', subcsribeRouter)
 
 const connectDB = async () => {
     try {

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addNew, checkPromotion, getPromotion, removePromotion, updatePromotion } from "../controller/promotions";
+import { addNew, checkPromotion, getPromotion, handleNotification, removePromotion, updatePromotion } from "../controller/promotions";
 
 const router = Router()
 
@@ -9,5 +9,6 @@ router.post('/add-promotion', addNew)
 router.put('/update-promotion', updatePromotion)
 router.delete('/delete-promotion', removePromotion)
 router.get('/check-promotion', checkPromotion)
+router.get('/notifycation', handleNotification)
 
 export default router
