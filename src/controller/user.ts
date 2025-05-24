@@ -42,11 +42,11 @@ const login = async (req: any, res: any) => {
             throw new Error('Tài khoản không tồn tại!!!')
         }
 
+        console.log(password)
         const isMatchPassword = await bcrypt.compare(password, item.password)
-        if(isMatchPassword) {
+        if(!isMatchPassword) {
             throw new Error('Sai Tài khoản hoặc mật khẩu!!!')
         }
-
         const accesstoken = await getAccesstoken({_id: item._id, email: item.email, rule: item.rule})
 
         res.status(200).json({
