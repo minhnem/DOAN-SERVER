@@ -119,7 +119,7 @@ const handleNotification = async (req: any, res: any) => {
                             <h3>✨ Chi tiết ưu đãi:</h3>
                             <ul style="line-height: 1.6;">
                                 <li><strong>Mã giảm giá:</strong> <span style="color: #2b6cb0; font-size: 18px;"><strong>${code?.code}</strong></span></li>
-                                <li><strong>Giá trị:</strong>${code?.value}</li>
+                                <li><strong>Giá trị: </strong>${code?.value}%</li>
                                 <li><strong>Thời hạn sử dụng:</strong> Đến hết ngày ${code?.endAt}</li>
                             </ul>
                             
