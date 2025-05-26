@@ -1,4 +1,5 @@
 import FeedbackModel from "../models/FeedbackModel"
+import { handleSendEmail } from "../utils/handleSendEmail"
 
 const addNewFeedback = async (req: any, res: any) => {
     const body = req.body
@@ -84,8 +85,31 @@ const replyFeedback = async (req: any, res: any) => {
     const body = req.body
     const {id} = req.query
     try {
-        console.log(body)
         const feedback = await FeedbackModel.findByIdAndUpdate(id, {status: 'Đã phản hồi'})
+        if(feedback?.email) {
+            await handleSendEmail({
+                from: 'Nhà hàng Hải Dương',
+                to: feedback.email,
+                subject: "📩 Phản hồi từ Nhà hàng Hải Dương",
+                text: `Chào bạn, chúng tôi đã nhận được phản hồi của bạn và xin gửi lại câu trả lời như sau: ${body.content}`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9;">
+                        <div style="max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                            <h2 style="color: #2b6cb0;">📩 Phản hồi từ Nhà hàng Hải Dương</h2>
+                            <p>Chào bạn,</p>
+                            <p>Chúng tôi xin chân thành cảm ơn bạn đã gửi phản hồi đến Nhà hàng <strong>Hải Dương</strong>.</p>
+                            <p>Sau đây là nội dung phản hồi của chúng tôi:</p>
+                            <div style="border-left: 4px solid #2b6cb0; padding-left: 15px; margin: 20px 0; color: #333;">
+                                ${body.content}
+                            </div>
+                            <p>Hy vọng phản hồi của chúng tôi giúp bạn hài lòng. Rất mong được tiếp tục phục vụ bạn trong thời gian tới.</p>
+                            <p style="margin-top: 30px;">Trân trọng,</p>
+                            <p><strong>Nhà hàng Hải Dương</strong></p>
+                        </div>
+                    </div>
+                `,
+            });
+        }
         res.status(200).json({
             message: 'Phản hồi dến khách hàng thành công.',
             data: feedback
