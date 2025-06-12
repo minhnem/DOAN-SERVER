@@ -151,7 +151,7 @@ const getAllbillTime = async (startAt: Date, endAt: Date) => {
 
 //====================================================================//
 // Lấy doanh thu mỗi ngày liên tục trong X ngày gần nhất
-const getDailyRevenue = async (daysAgo = 56) => {
+const getDailyRevenue = async (daysAgo = 14) => {
   const end = new Date();
   const start = new Date();
   start.setDate(start.getDate() - daysAgo);
@@ -197,7 +197,7 @@ const getDailyRevenue = async (daysAgo = 56) => {
 
 const predictRevenueNextWeek = async (req: any, res: any) => {
   try {
-    const history = await getDailyRevenue(56); // 8 tuần gần nhất
+    const history = await getDailyRevenue(14); // 8 tuần gần nhất
     // Lọc ra các ngày có revenue thực sự
     const filtered = history.filter(item => item.revenue > 0);
     const revenueValues = filtered.map(item => item.revenue);
@@ -297,11 +297,11 @@ const getDailyDishSales = async (daysAgo = 56) => {
 
   return rawData;
 };
-
+//*************************************** sửa giảm số lượng promotion ******************************/
 const predictTop5Dishes = async (req: any, res: any) => {
   try {
     const rawData: any = await getDailyDishSales(56);
-    console.log(JSON.stringify(rawData, null, 2));
+    // console.log(JSON.stringify(rawData, null, 2));
     // const rawData = [
     //   {
     //     _id: "Món chính 1",

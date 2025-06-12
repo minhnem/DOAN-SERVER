@@ -7,9 +7,9 @@ const router = Router()
 
 router.get('/', verifyToken, authorize([0,1]), getAllTable)
 router.get('/get-table-reservations', verifyToken, authorize([0,1]), getTableReservations)
-router.post('/add-new-table', verifyToken, authorize([0,1]), addNewTable)
-router.put('/update-table', verifyToken, authorize([0,1]), updateTable)
-router.delete('/delete-table', verifyToken, authorize([0,1]), removeTable)
+router.post('/add-new-table', verifyToken, authorize([0]), addNewTable)
+router.put('/update-table', verifyToken, authorize([0]), updateTable)
+router.delete('/delete-table', verifyToken, authorize([0]), removeTable)
 router.put('/update-status-table', verifyToken, authorize([0,1]), updateStatusTable)
 
 export default router

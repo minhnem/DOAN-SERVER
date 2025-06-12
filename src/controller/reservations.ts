@@ -11,7 +11,7 @@ const addNewReservations = async (req: any, res: any) => {
             await TableModel.findByIdAndUpdate(item.table_id, {$set: {status: 'Được đặt trước'}})
         }
 
-        if(!item.status) {
+        if(item.status === 'Chờ xử lý') {
             await handleSendEmail({
                 from: 'Nhà hàng Hải Dương',
                 to: 'namtdvp10a6@gmail.com',
